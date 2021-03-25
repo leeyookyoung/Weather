@@ -7,10 +7,7 @@
 
 ## :scroll: Description
 <!--- Describe your app in one or two sentences -->
-This is an app for the [Android Dev Challenge for Week 4 - Weather](https://android-developers.googleblog.com/2021/03/android-dev-challenge-4.html)
-Actually I almost gave up because I knew that there was no submission of Android Dev Challenge but there wasn't.
-When I got the last submission, left due was only two days.
-But I'd changed my mind to challenge it, and I thought that even though I can't have done it, just try to do my best.
+This is weather app for the [Android Dev Challenge for Week 4 - Weather](https://android-developers.googleblog.com/2021/03/android-dev-challenge-4.html)
 
 ## :bulb: Motivation and Context
 <!--- Optionally point readers to interesting parts of your submission. -->
@@ -18,8 +15,6 @@ But I'd changed my mind to challenge it, and I thought that even though I can't 
 I referenced [Korea's weather forecast system](https://www.weather.go.kr/w/index.do)
 and I downloaded App's weather icons on the [Flaticon](https://www.flaticon.com/categories/weather)
 and I got a lot to learn from documentations of [animation](https://developer.android.com/jetpack/compose/animation) and [graphics](https://developer.android.com/jetpack/compose/graphics)
-
-
 
 
 ## :camera_flash: Screenshots

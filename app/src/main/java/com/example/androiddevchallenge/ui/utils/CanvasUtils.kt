@@ -26,10 +26,10 @@ class CanvasUtils {
         val paint = Paint()
         val paint2 = Paint()
         init {
-            paint.textSize = 40f
+            paint.textSize = 10f
             paint.color = 0xff000000.toInt()
 
-            paint2.textSize = 55f
+            paint2.textSize = 15f
             paint2.isFakeBoldText = true
             paint2.color = 0xff000000.toInt()
         }

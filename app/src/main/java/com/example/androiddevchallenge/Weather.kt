@@ -237,13 +237,20 @@ fun WeatherScreen(darkMode: Boolean) {
                         },
                     elevation = 2.dp
                 ) {
-                    Row(
-                        Modifier
-                            .horizontalScroll(rememberScrollState())
-                    ) {
-                        Spacer(modifier = Modifier.width(intervalMargin))
-                        for (weeklyWeatherInfo in weeklyWeatherInfoList) {
-                            WeeklyWeatherForecastCard(weeklyWeatherInfo)
+                    Column {
+                        Text(
+                            modifier = Modifier.padding(start = intervalMargin, top = basicMargin),
+                            text = "Weekly weather forecast",
+                            style = MaterialTheme.typography.subtitle1
+                        )
+                        Row(
+                            Modifier
+                                .horizontalScroll(rememberScrollState())
+                        ) {
+                            Spacer(modifier = Modifier.width(intervalMargin))
+                            for (weeklyWeatherInfo in weeklyWeatherInfoList) {
+                                WeeklyWeatherForecastCard(weeklyWeatherInfo)
+                            }
                         }
                     }
                 }
@@ -423,6 +430,7 @@ fun DetailCardBasicInfo(title: String, value: String) {
 }
 
 data class DrawInfo(val dstHeight: Float, val dstWidth: Float, val x: Float, val y: Float, val name: String, val info: WeatherInfo, val mulValue: Int = 1)
+
 @Composable
 fun WeatherDetailCanvas(maxWidth: Dp, weatherDrawInfo: WeatherDrawInfo, infiniteTransitionValueMap: Map<TransitionType, Float>) {
     val imageBitmaps = getImageBitmaps()
@@ -438,8 +446,8 @@ fun WeatherDetailCanvas(maxWidth: Dp, weatherDrawInfo: WeatherDrawInfo, infinite
         val y = dstHeight / 4
         val name = weatherDrawInfo.name
         val info = weatherDrawInfo.info
-
-        drawWeatherDetailIconAndText(this, imageBitmaps, DrawInfo(dstHeight, dstWidth, x, y, name, info, 2), weatherDrawInfo, infiniteTransitionValueMap, false) {
+        setPaintTextSize(density)
+        drawWeatherDetailIconAndText(this, imageBitmaps, DrawInfo(dstHeight, dstWidth, x, y, name, info, 2), density, weatherDrawInfo, infiniteTransitionValueMap, false) {
             drawIntoCanvas {
                 it.nativeCanvas.drawText(
                     name, x + dstWidth + dstWidth / 4, y + dstHeight / 2,
@@ -458,6 +466,7 @@ fun drawWeatherDetailIconAndText(
     onDraw: DrawScope,
     imageBitmaps: Map<WeatherType, ImageBitmap>,
     drawInfo: DrawInfo,
+    density: Float,
     weatherDrawInfo: WeatherDrawInfo,
     infiniteTransitionValueMap: Map<TransitionType, Float>,
     clickWeather: Boolean,
@@ -506,10 +515,10 @@ fun drawWeatherDetailIconAndText(
                 )
             }
             val drop2ImageBitmap = imageBitmaps[WeatherType.DROP2]!!
-            dropDraw(drop2ImageBitmap, x.toInt(), y.toInt() + infiniteTransitionValueMap[TransitionType.UP_DOWN1]!!.toInt() * mulValue)
-            dropDraw(imageBitmaps[WeatherType.DROP1]!!, x.toInt() + dropXPosition, y.toInt() + infiniteTransitionValueMap[TransitionType.UP_DOWN2]!!.toInt() * mulValue)
-            dropDraw(drop2ImageBitmap, x.toInt() + dropXPosition * 2, y.toInt() + infiniteTransitionValueMap[TransitionType.UP_DOWN3]!!.toInt() * mulValue)
-            dropDraw(drop2ImageBitmap, x.toInt() + dropXPosition * 3, y.toInt() + infiniteTransitionValueMap[TransitionType.UP_DOWN4]!!.toInt() * mulValue)
+            dropDraw(drop2ImageBitmap, x.toInt(), y.toInt() + (infiniteTransitionValueMap[TransitionType.UP_DOWN1]!! * mulValue * density).toInt())
+            dropDraw(imageBitmaps[WeatherType.DROP1]!!, x.toInt() + dropXPosition, y.toInt() + (infiniteTransitionValueMap[TransitionType.UP_DOWN2]!! * mulValue * density).toInt())
+            dropDraw(drop2ImageBitmap, x.toInt() + dropXPosition * 2, y.toInt() + (infiniteTransitionValueMap[TransitionType.UP_DOWN3]!! * mulValue * density).toInt())
+            dropDraw(drop2ImageBitmap, x.toInt() + dropXPosition * 3, y.toInt() + (infiniteTransitionValueMap[TransitionType.UP_DOWN4]!! * mulValue * density).toInt())
         }
         WeatherType.WINDY -> {
             drawMain(
@@ -551,6 +560,11 @@ fun drawWeatherDetailIconAndText(
     localInfo()
 }
 
+fun setPaintTextSize(density: Float) {
+    CanvasUtils.paint.textSize = 10f * density
+    CanvasUtils.paint2.textSize = 20f * density
+}
+
 @Composable
 fun WeatherIconCanvas(weatherDrawInfo: WeatherDrawInfo, infiniteTransitionValueMap: Map<TransitionType, Float>, clickWeather: Boolean) {
     val imageBitmaps = getImageBitmaps()
@@ -565,9 +579,11 @@ fun WeatherIconCanvas(weatherDrawInfo: WeatherDrawInfo, infiniteTransitionValueM
         val dstWidth = weatherDrawInfo.dstWidth.value * density
         val name = weatherDrawInfo.name
         val info = weatherDrawInfo.info
-        drawWeatherDetailIconAndText(this, imageBitmaps, DrawInfo(dstHeight, dstWidth, x, y, name, info), weatherDrawInfo, infiniteTransitionValueMap, clickWeather) {
+        setPaintTextSize(density)
+        drawWeatherDetailIconAndText(this, imageBitmaps, DrawInfo(dstHeight, dstWidth, x, y, name, info), density, weatherDrawInfo, infiniteTransitionValueMap, clickWeather) {
             CanvasUtils.paint.alpha = if (clickWeather) (infiniteTransitionValueMap[TransitionType.ALPHA1]!! * 255).toInt() else 255
             drawIntoCanvas {
+
                 it.nativeCanvas.drawText(
                     name, x, (y + dstHeight),
                     CanvasUtils.paint
